@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Happy Chocolate Day! 🍫</title>
+
+<style>
+    /* --- RESET & BASICS --- */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+        height: 100vh;
+        height: 100dvh;
+        /* Chocolate Gradient Background */
+        background: linear-gradient(135deg, #4e342e 0%, #8d6e63 50%, #d7ccc8 100%);
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        color: #3e2723;
+    }
+
+    /* --- FLOATING CHOCOLATES BG --- */
+    #choco-container {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        pointer-events: none; z-index: 0;
+    }
+    .choco-bg {
+        position: absolute; opacity: 0.4;
+        animation: floatUp 7s linear infinite;
+        filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
+    }
+    @keyframes floatUp {
+        0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+        20% { opacity: 0.8; }
+        100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* --- MAIN CARD --- */
+    .container {
+        background: rgba(255, 248, 240, 0.95); /* Creamy white */
+        backdrop-filter: blur(8px);
+        padding: 25px;
+        border-radius: 25px;
+        width: 90%;
+        max-width: 380px;
+        max-height: 95vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 20px 50px rgba(62, 39, 35, 0.5);
+        text-align: center;
+        position: relative;
+        z-index: 10;
+        border: 4px solid #bcaaa4;
+    }
+
+    h1 {
+        color: #5d4037; /* Dark Chocolate */
+        margin-bottom: 10px;
+        font-size: 26px;
+        font-weight: 800;
+        text-shadow: 1px 1px 0px #d7ccc8;
+    }
+
+    /* --- SCROLLABLE LETTER --- */
+    .message-box {
+        background: #efebe9;
+        border: 2px dashed #8d6e63;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 15px;
+        text-align: left;
+        font-size: 16px;
+        color: #4e342e;
+        line-height: 1.6;
+        white-space: pre-line;
+        overflow-y: auto;
+        max-height: 35vh;
+        scroll-behavior: smooth;
+        box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+    }
+    
+    .message-box::-webkit-scrollbar { width: 5px; }
+    .message-box::-webkit-scrollbar-thumb { background: #8d6e63; border-radius: 10px; }
+
+    /* --- GIF AREA --- */
+    .gif-container {
+        width: 100%;
+        height: 150px;
+        border-radius: 15px;
+        overflow: hidden;
+        margin-bottom: 15px;
+        border: 3px solid #fff;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        flex-shrink: 0;
+    }
+    .gif-container img {
+        width: 100%; height: 100%; object-fit: cover;
+    }
+
+    /* --- BUTTONS --- */
+    .btn-group {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        width: 100%;
+        position: relative;
+        min-height: 55px;
+    }
+
+    button {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 50px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+        min-width: 110px;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    button:active { transform: scale(0.95); }
+
+    #startBtn {
+        width: 100%;
+        background: linear-gradient(to right, #6d4c41, #8d6e63);
+        color: #fff;
+        border: 2px solid #a1887f;
+        box-shadow: 0 6px 20px rgba(93, 64, 55, 0.4);
+    }
+
+    #yesBtn {
+        background: #4caf50; /* Green for GO */
+        color: white;
+        box-shadow: 0 4px 10px rgba(76, 175, 80, 0.4);
+        z-index: 20;
+    }
+
+    #noBtn {
+        background: #d32f2f; /* Red for Stop */
+        color: white;
+        box-shadow: 0 4px 10px rgba(211, 47, 47, 0.4);
+        z-index: 100;
+        position: relative;
+        transition: top 0.3s ease, left 0.3s ease;
+    }
+
+    .hidden { display: none !important; }
+    
+    /* Extra sparkle for text */
+    .highlight { color: #d81b60; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<iframe id="music" allow="autoplay" style="display:none"></iframe>
+<div id="choco-container"></div>
+
+<div class="container">
+    <h1 id="mainTitle">🍫 Special Delivery...</h1>
+
+    <button id="startBtn">Unwrap Me! 🍬</button>
+
+    <div id="content" class="hidden">
+        
+        <div class="message-box" id="typingText"></div>
+
+        <div class="gif-container">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcGpmamVqZ2F3aGZ4aGZ4aGZ4aGZ4aGZ4aGZ4aGZ4aGZ4aGZ4/3oxHQpNK5P8yWV11yE/giphy.gif" alt="Eating Chocolate">
+        </div>
+
+        <div class="btn-group">
+            <button id="yesBtn">YUMMY! 😋</button>
+            <button id="noBtn">On Diet 🥗</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// --- CONFIGURATION ---
+const startBtn = document.getElementById("startBtn");
+const content = document.getElementById("content");
+const typingText = document.getElementById("typingText");
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const musicFrame = document.getElementById("music");
+
+// Updated Message for Chocolate Day
+const message = 
+`My Sweetest Ras Malai 🍬
+
+You are softer than Silk,
+Nutty like a Ferrero,
+And more addictive than Coffee! ☕️
+
+Life with you is the sweetest treat,
+and I want to share every bite with you.
+
+Forget the calories today...
+Viku wants to know:
+Will you accept this virtual chocolate? 🍫`;
+
+// THE TAUNTS (Chocolate Themed)
+const taunts = [
+    "Diet kal se start karna! 🥗",
+    "Itna bhav mat kha, chocolate kha! 🍫",
+    "Too sweet to resist! 😋",
+    "Calories don't count today! ❌",
+    "Bhalai issi mein hai ki YES bol do! 😎",
+    "Don't break my heart, eat the chocolate! 💔"
+];
+let tauntIndex = 0;
+
+// --- BACKGROUND FLOATING ELEMENTS ---
+function createSweets() {
+    const container = document.getElementById('choco-container');
+    const sweet = document.createElement('div');
+    sweet.classList.add('choco-bg');
+    
+    // Random selection of chocolatey emojis
+    const emojis = ['🍫', '🍬', '🍭', '🍪', '🍩', '🧁', '🤎'];
+    sweet.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+    
+    sweet.style.left = Math.random() * 100 + 'vw';
+    sweet.style.animationDuration = (Math.random() * 4 + 4) + 's';
+    sweet.style.fontSize = (Math.random() * 25 + 20) + 'px';
+    
+    container.appendChild(sweet);
+    setTimeout(() => { sweet.remove(); }, 8000);
+}
+setInterval(createSweets, 300);
+
+// --- TYPING EFFECT ---
+let charIndex = 0;
+function typeEffect() {
+    if (charIndex < message.length) {
+        typingText.textContent += message.charAt(charIndex);
+        charIndex++;
+        typingText.scrollTop = typingText.scrollHeight; 
+        setTimeout(typeEffect, 40); 
+    }
+}
+
+// --- START BUTTON ---
+startBtn.onclick = () => {
+    startBtn.style.display = "none";
+    content.classList.remove("hidden");
+    document.getElementById("mainTitle").innerText = "For My Sweetheart ❤️";
+    // Play a sweet song (Optional)
+    musicFrame.src = "https://www.youtube.com/embed/S_8qQ5e5T14?autoplay=1&start=20"; 
+    typeEffect();
+};
+
+// --- NO BUTTON LOGIC (The Taunt System) ---
+function runAway() {
+    const maxX = window.innerWidth - noBtn.offsetWidth - 30;
+    const maxY = window.innerHeight - noBtn.offsetHeight - 30;
+    
+    const randomX = Math.max(20, Math.random() * maxX);
+    const randomY = Math.max(20, Math.random() * maxY);
+
+    noBtn.style.position = "fixed"; 
+    noBtn.style.left = randomX + "px";
+    noBtn.style.top = randomY + "px";
+}
+
+noBtn.addEventListener('mouseover', () => {
+    if (!('ontouchstart' in window)) {
+        runAway();
+    }
+});
+
+noBtn.addEventListener('click', (e) => {
+    e.preventDefault();
+    alert(taunts[tauntIndex % taunts.length]);
+    tauntIndex++;
+    runAway();
+});
+
+// --- YES BUTTON SUCCESS ---
+yesBtn.onclick = () => {
+    document.querySelector('.container').innerHTML = `
+        <div>
+            <h1 style="color: #d81b60; font-size: 28px;">SWEETEST DEAL! 🍫</h1>
+            <p style="font-size: 18px; color: #4e342e; margin: 15px 0;">
+                You are my favorite flavor! ❤️<br>
+                Lifetime supply of love (and chocolates) unlocked!<br>
+                <b>Love you Seju!</b>
+            </p>
+            <div style="border-radius:15px; overflow:hidden; border: 3px solid #d81b60;">
+                <img style="width: 100%; display:block;" 
+                     src="https://media.giphy.com/media/l2R032V7qQq816UyQ/giphy.gif">
+            </div>
+        </div>
+    `;
+    // Create LOTS of candy
+    setInterval(createSweets, 100);
+};
+</script>
+
+</body>
+</html>
