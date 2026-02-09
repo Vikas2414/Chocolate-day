@@ -10,15 +10,16 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-        /* dvh fixes the iPhone URL bar scroll issue */
+        /* 100dvh fixes the "address bar" scroll issue on iPhones/Androids */
         height: 100vh;
         height: 100dvh; 
+        /* Chocolate Gradient Background */
         background: linear-gradient(135deg, #4e342e 0%, #8d6e63 50%, #d7ccc8 100%);
         font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden; /* Prevents scrolling if button moves too far */
+        overflow: hidden;
         color: #3e2723;
     }
 
@@ -30,6 +31,7 @@
     .choco-bg {
         position: absolute; opacity: 0.4;
         animation: floatUp 7s linear infinite;
+        filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2));
     }
     @keyframes floatUp {
         0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
@@ -39,14 +41,13 @@
 
     /* --- MAIN CARD --- */
     .container {
-        background: rgba(255, 248, 240, 0.95);
+        background: rgba(255, 248, 240, 0.95); /* Creamy white */
         backdrop-filter: blur(8px);
         padding: 25px;
         border-radius: 25px;
         width: 90%;
         max-width: 380px;
-        /* Ensures card fits on small iPhone screens */
-        max-height: 90dvh; 
+        max-height: 95vh;
         display: flex;
         flex-direction: column;
         box-shadow: 0 20px 50px rgba(62, 39, 35, 0.5);
@@ -57,14 +58,14 @@
     }
 
     h1 {
-        color: #5d4037;
+        color: #5d4037; /* Dark Chocolate */
         margin-bottom: 10px;
         font-size: 26px;
         font-weight: 800;
         text-shadow: 1px 1px 0px #d7ccc8;
     }
 
-    /* --- MESSAGE BOX --- */
+    /* --- SCROLLABLE LETTER --- */
     .message-box {
         background: #efebe9;
         border: 2px dashed #8d6e63;
@@ -77,9 +78,13 @@
         line-height: 1.6;
         white-space: pre-line;
         overflow-y: auto;
-        max-height: 30vh; /* Dynamic height */
+        max-height: 35vh;
         scroll-behavior: smooth;
+        box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
     }
+    
+    .message-box::-webkit-scrollbar { width: 5px; }
+    .message-box::-webkit-scrollbar-thumb { background: #8d6e63; border-radius: 10px; }
 
     /* --- GIF AREA --- */
     .gif-container {
@@ -103,7 +108,7 @@
         gap: 15px;
         width: 100%;
         position: relative;
-        min-height: 55px; /* Keeps space for buttons */
+        min-height: 55px;
     }
 
     button {
@@ -113,9 +118,11 @@
         font-size: 16px;
         font-weight: 700;
         cursor: pointer;
-        transition: transform 0.2s;
+        transition: transform 0.1s; /* Faster transition for shake */
         min-width: 110px;
-        -webkit-tap-highlight-color: transparent; /* Removes blue highlight on tap */
+        /* Fix for iPhone gray tap box */
+        -webkit-tap-highlight-color: transparent;
+        outline: none;
     }
     
     button:active { transform: scale(0.95); }
@@ -129,20 +136,30 @@
     }
 
     #yesBtn {
-        background: #4caf50;
+        background: #4caf50; 
         color: white;
         box-shadow: 0 4px 10px rgba(76, 175, 80, 0.4);
         z-index: 20;
     }
 
     #noBtn {
-        background: #d32f2f;
+        background: #d32f2f; 
         color: white;
         box-shadow: 0 4px 10px rgba(211, 47, 47, 0.4);
         z-index: 100;
-        /* Important for movement */
-        position: relative; 
-        transition: top 0.4s ease, left 0.4s ease;
+        /* Removed position: relative to keep it stable */
+    }
+
+    /* Animation class for shaking the button */
+    .shake {
+        animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    @keyframes shake {
+        10%, 90% { transform: translate3d(-1px, 0, 0); }
+        20%, 80% { transform: translate3d(2px, 0, 0); }
+        30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+        40%, 60% { transform: translate3d(4px, 0, 0); }
     }
 
     .hidden { display: none !important; }
@@ -151,7 +168,6 @@
 <body>
 
 <iframe id="music" allow="autoplay" style="display:none"></iframe>
-
 <div id="choco-container"></div>
 
 <div class="container">
@@ -164,7 +180,7 @@
         <div class="message-box" id="typingText"></div>
 
         <div class="gif-container">
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcGpmamVqZ2F3aGZ4aGZ4aGZ4aGZ4aGZ4aGZ4aGZ4aGZ4aGZ4/3oxHQpNK5P8yWV11yE/giphy.gif" alt="Eating Chocolate">
+            <img src="https://media1.tenor.com/m/NJFhzgDRgnIAAAAd/happy-birthdays.gif" alt="Eating Chocolate">
         </div>
 
         <div class="btn-group">
@@ -197,6 +213,7 @@ Forget the calories today...
 Viku wants to know:
 Will you accept this virtual chocolate? 🍫`;
 
+// THE TAUNTS
 const taunts = [
     "Diet kal se start karna! 🥗",
     "Itna bhav mat kha, chocolate kha! 🍫",
@@ -207,16 +224,19 @@ const taunts = [
 ];
 let tauntIndex = 0;
 
-// --- FLOATING SWEETS ---
+// --- BACKGROUND FLOATING ELEMENTS ---
 function createSweets() {
     const container = document.getElementById('choco-container');
     const sweet = document.createElement('div');
     sweet.classList.add('choco-bg');
+    
     const emojis = ['🍫', '🍬', '🍭', '🍪', '🍩', '🧁', '🤎'];
     sweet.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+    
     sweet.style.left = Math.random() * 100 + 'vw';
     sweet.style.animationDuration = (Math.random() * 4 + 4) + 's';
     sweet.style.fontSize = (Math.random() * 25 + 20) + 'px';
+    
     container.appendChild(sweet);
     setTimeout(() => { sweet.remove(); }, 8000);
 }
@@ -238,43 +258,22 @@ startBtn.onclick = () => {
     startBtn.style.display = "none";
     content.classList.remove("hidden");
     document.getElementById("mainTitle").innerText = "For My Sweetheart ❤️";
-    // Attempt to play music on user interaction (Better for iPhone)
-    musicFrame.src = "https://www.youtube.com/embed/S_8qQ5e5T14?autoplay=1&start=20"; 
+    musicFrame.src = "https://www.youtube.com/shorts/dSnroz-41l8"; 
     typeEffect();
 };
 
-// --- NO BUTTON LOGIC (Fixed) ---
-function moveButton() {
-    // 1. Get exact button size
-    const btnWidth = noBtn.offsetWidth;
-    const btnHeight = noBtn.offsetHeight;
-
-    // 2. Get Safe Area (Window Size - Button Size - 20px padding)
-    // This ensures the button never spawns partly off-screen
-    const maxX = window.innerWidth - btnWidth - 20;
-    const maxY = window.innerHeight - btnHeight - 20;
-
-    // 3. Generate random positions within the safe area
-    // Math.max(10, ...) ensures it doesn't spawn too far top/left
-    const randomX = Math.max(10, Math.random() * maxX);
-    const randomY = Math.max(10, Math.random() * maxY);
-
-    // 4. Apply Position
-    noBtn.style.position = "fixed"; 
-    noBtn.style.left = randomX + "px";
-    noBtn.style.top = randomY + "px";
-}
-
-// Click Logic: Alert FIRST, then Move
+// --- NO BUTTON LOGIC (FIXED: NO MOVING) ---
 noBtn.addEventListener('click', (e) => {
     e.preventDefault();
     
-    // Show Taunt
+    // 1. Show the Taunt
     alert(taunts[tauntIndex % taunts.length]);
     tauntIndex++;
     
-    // Move AFTER they close the alert
-    moveButton();
+    // 2. Shake the button (Visual Feedback)
+    noBtn.classList.remove('shake'); // Reset animation
+    void noBtn.offsetWidth; // Trigger reflow
+    noBtn.classList.add('shake'); // Start animation
 });
 
 // --- YES BUTTON SUCCESS ---
@@ -289,7 +288,7 @@ yesBtn.onclick = () => {
             </p>
             <div style="border-radius:15px; overflow:hidden; border: 3px solid #d81b60;">
                 <img style="width: 100%; display:block;" 
-                     src="https://media.giphy.com/media/l2R032V7qQq816UyQ/giphy.gif">
+                     src="https://media.tenor.com/sOVYL1RsYyYAAAAi/munch-face.gif">
             </div>
         </div>
     `;
