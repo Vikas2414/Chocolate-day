@@ -255,13 +255,20 @@ startBtn.onclick = () => {
 };
 
 // --- NO BUTTON LOGIC (The Taunt System) ---
+
+// --- NO BUTTON LOGIC (Safer Version) ---
 function runAway() {
-    const maxX = window.innerWidth - noBtn.offsetWidth - 30;
-    const maxY = window.innerHeight - noBtn.offsetHeight - 30;
+    // 1. Get the width/height of the window
+    // We subtract 80px (instead of 30px) to keep it away from bottom toolbars
+    const maxX = window.innerWidth - noBtn.offsetWidth - 30; 
+    const maxY = window.innerHeight - noBtn.offsetHeight - 80; 
     
+    // 2. Calculate a random position
+    // Math.max(20, ...) ensures it doesn't get stuck too close to the top-left
     const randomX = Math.max(20, Math.random() * maxX);
     const randomY = Math.max(20, Math.random() * maxY);
 
+    // 3. Apply the new position
     noBtn.style.position = "fixed"; 
     noBtn.style.left = randomX + "px";
     noBtn.style.top = randomY + "px";
